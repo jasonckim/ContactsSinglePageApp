@@ -12,19 +12,60 @@ $(document).ready(function(){
     $(this).parents(".contact").remove();
   };
   
+  var editContact = function(event){
+    var $contact = $(this).parents(".contact");
+    var $btn = $(this);
+    $btn.toggleClass("edit");
+    $btn.toggleClass("update");
+    $btn.html("SAVE").toggleClass("btn-attention");
+    $contact.find(".contact-item").attr("contenteditable", "true");
+  
+    //Deal with contact img
+    var $contactImg = $contact.find("#contact-img");
+    var src = $contactImg.attr("src");
+    var $imgCon = $contact.find(".contact-img-con")
+    $imgCon.empty();
+    $imgCon.attr("contenteditable", "true");
+    $imgCon.html(src);
+   
+  };
+ 
+  var updateContact = function(event){
+    var $contact = $(this).parents(".contact");
+    var $btn = $(this);
+    $btn.toggleClass("edit");
+    $btn.toggleClass("update");
+    $btn.html("Edit").toggleClass("btn-attention");
+    $contact.find(".contact-item").attr("contenteditable", "false");
+    
+    var name = $contact.find(".contact-name").first().html();
+    var email = $contact.find(".contact-email").first().html();
+    var number = $contact.find(".contact-number").first().html();
+   
+    var $imgCon = $contact.find(".contact-img-con");
+    var imgUrl = $imgCon.first().html();
+    $imgCon.empty();
+    $imgCon.append( "<img id='contact-img' src='" + imgUrl + "' class='contact-img'>");
+    $imgCon.attr("contenteditable", "false");
+  };
+  
   $("#contacts").on("click", ".delete", deleteContact);
  
- 
+  $("#contacts").on("click", ".edit", editContact);
+  
+  $("#contacts").on("click", ".update", updateContact);
+  
   var addContact = function(newContact){
     var contactString = ["<div id='", newContact.id, "' class='contact'>",
-                               "<div>",
-                              "<img src='", newContact.imgUrl, "' class='contact-img'>",
+                               "<div class='contact-img-con'>",
+                              "<img id='contact-img' src='", newContact.imgUrl, "' class='contact-img'>",
                             "</div>",
-                            "<div class='contact-item'>", newContact.name, "</div>",
-                            "<div class='contact-item'>", newContact.email, "</div>",
-                            "<div class='contact-item'>", newContact.number, "</div>",
+                            "<div class='contact-item contact-name'>", newContact.name, "</div>",
+                            "<div class='contact-item contact-email'>", newContact.email, "</div>",
+                            "<div class='contact-item contact-number'>", newContact.number, "</div>",
           
                             "<div class='contact-actions'>",
+                              "<span class='edit btn btn-action'>Edit</span> ",
                             
                               "<span class='delete btn btn-action'>Delete</span>",
                             "</div>",
@@ -71,4 +112,33 @@ $(document).ready(function(){
     addContact(newContact);
  
   });
+ 
+ 
+  var contacts = [];
+  $.get('/contacts.json').done(function(data){
+    contacts = data
+    $.each(contacts, function(index,item){
+      addContact(item);
+    });
+  });
+
+
 });
+
+
+
+// $( "#contacts" ).submit(function( event ) {
+    
+//     var movie_title = $('#movie_title').val();
+//     var url = "http://www.omdbapi.com?t=" + movie_title;
+
+//     $.ajax(url, {type: 'get'}).success(function(data) {
+//       var movieData = JSON.parse(data);
+//       $("#movie_title").val('');
+//       $('#title').html(movieData.Title);
+//       $('#movie_details').html("<p>Year:" + movieData.Year + "</p>"
+//         + "<p>Director:" + movieData.Director + "</p>");
+//     });
+
+//     event.preventDefault();
+//   });

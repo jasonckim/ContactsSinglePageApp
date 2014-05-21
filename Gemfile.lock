@@ -146,6 +146,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 1.2)
   jquery-rails
+  json
   pg
   pry
   pry-debugger

@@ -32,6 +32,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'json'
+
 
 group :development, :test do
   gem 'dotenv-rails'
